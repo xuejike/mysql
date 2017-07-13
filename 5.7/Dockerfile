@@ -64,7 +64,13 @@ RUN { \
 # don't reverse lookup hostnames, they are usually another container
 RUN sed -Ei 's/^(bind-address|log)/#&/' /etc/mysql/mysql.conf.d/mysqld.cnf \
 	&& echo '[mysqld]\nskip-host-cache\nskip-name-resolve' > /etc/mysql/conf.d/docker.cnf
-
+RUN mkdir -p /etc/mysql/conf.d \
+	&& { \
+		echo '[client]'; \
+		echo 'default-character-set=utf8'; \
+		echo '[mysqld]'; \
+		echo 'character-set-server=utf8'; \
+	} > /etc/mysql/conf.d/character.cnf
 VOLUME /var/lib/mysql
 
 COPY docker-entrypoint.sh /usr/local/bin/
